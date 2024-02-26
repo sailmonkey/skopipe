@@ -1,31 +1,32 @@
-# Script to ingest yahoo finance data into a pandas dataframe. 
+import yfinance as yahooFinance    # Yahoo finance API
+import pandas as pd   # Data manipulation library
+import duckdb    # DuckDB database
 
-import pandas as pd
-import numpy as np
-import datetime
-import pandas_datareader.data as web
-import matplotlib.pyplot as plt
-from matplotlib import style
+# Define stock symbols and data range for data extraction
+symbols = ['PSTG', 'NTAP', 'DELL']
+start_date = '2024-02-01'
+end_date = '2024-02-26'
 
+# Get stock information for the defined symbols and extract the data from Yahoo Fiance  
+data = pd.DataFrame()
+for symbol in symbols:
+    ticker = yahooFinance.Ticker(symbol)
+    stock_data = ticker.history(start=start_date, end=end_date)
+    stock_data['symbol'] = symbol
+    data = pd.concat([data, stock_data])
 
-def get_data(ticker, start, end):
-    df = web.DataReader(ticker, 'yahoo', start, end)
-    return df
+# Clean and transform the data
+data = data.reset_index()
+data = data.drop(['Dividends', 'Stock Splits', 'Volume'], axis=1)
+data = data.rename(columns={'Date': 'date', 'Open': 'open', 'High': 'high', 'Low': 'low', 'Close': 'close', 'symbol': 'symbol'})
 
-def main():
-    start = datetime.datetime(2010, 1, 1)
-    end = datetime.datetime(2015, 1, 1)
-    ticker = 'AAPL'
-    df = get_data(ticker, start, end)
-    print(df.head())
-    df['Adj Close'].plot()
-    plt.show()
+# Test Print the stock information
+# print(data)
 
-if __name__ == '__main__':
-    main()
-
-
-# End of file
-    
-
-    
+# Load the data into DuckDB database with context manager
+with duckdb.connect("yfinance.db") as con:
+    #con.sql("CREATE TABLE stock_data (date DATE, open FLOAT, high FLOAT, low FLOAT, close FLOAT, symbol VARCHAR)")
+    con.register('df', data)
+    con.sql("INSERT INTO stock_data SELECT * FROM df")
+    con.table("stock_data").show()
+    # the context manager closes the connection automatically
