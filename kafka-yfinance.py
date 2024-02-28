@@ -1,9 +1,9 @@
-from confluent_kafka import Producer
+from confluent_kafka import Producer # Kafka Python client
 import yfinance as yahooFinance    # Yahoo finance API
-import time 
-import requests
-import json
-import socket
+import time  # For the interval between stock price fetches
+import requests # For making HTTP requests to the Yahoo finance API
+import json # For parsing the JSON response from the Yahoo finance API
+import socket # For getting the hostname of the machine running the script
 
 # Kafka producer configuration
 headers = {
@@ -11,7 +11,6 @@ headers = {
     'Content-Type': 'application/json',
     'Authorization': 'Bear <token>'
 }
-
 
 # Create a producer instance
 conf = {'bootstrap.servers': '10.234.112.205:9092',
@@ -42,7 +41,7 @@ def fetch_and_send_stock_price():
     print(f"Error fetching/sending stock price: {e}")
 
 # Sleep for a specified interval (e.g., 5 seconds) before fetching the next price
-   time.sleep(60)
+   time.sleep(30)
 
 # Start sending stock price data
 fetch_and_send_stock_price()
