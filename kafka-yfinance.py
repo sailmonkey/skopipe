@@ -35,6 +35,7 @@ def fetch_and_send_stock_price():
      #Function to fetch stock price and send to Kafka
      # Produce the stock price to the Kafka topic
      producer.produce(topic, key=str(tksymbol), value=str(price))
+     print('Now flushing the producer')
      producer.flush()
      print(f"Sent {tksymbol} price to Kafka: {price}")
    except Exception as e:
