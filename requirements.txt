@@ -1,6 +1,9 @@
-yfinance 
-pandas
+pandas==2.2.1
 cassandra-driver==3.25.0
 numpy==1.19.3
 astrapy==0.0.2
 simplejson==3.17.2
+finhub-python==2.4.19
+websocket-client==1.7.0
+websocker=0.2.1
+boto3==1.34.55clear
