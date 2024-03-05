@@ -1,8 +1,8 @@
-import websocket # For connecting to FinnHub Websocket
-import json # For parsing JSON data from FinnHub
+import websocket # for connecting to Finnhub Websocket
+import json # for parsing JSON data from Finnhub
 import os
 import time
-import boto3 # For connecting to FlashBlade using Boto3
+import boto3 # for connecting to FlashBlade using Boto3
 
 
 # Variables required for FinnHub configuration
