@@ -3,7 +3,7 @@ import pandas as pd   # Data manipulation library
 import duckdb    # DuckDB database
 
 # Define stock symbols and data range for data extraction
-symbols = ['PSTG', 'NTAP', 'DELL']
+symbols = ['PSTG']
 start_date = '2024-02-01'
 end_date = '2024-02-26'
 
@@ -11,16 +11,21 @@ end_date = '2024-02-26'
 data = pd.DataFrame()
 for symbol in symbols:
     ticker = yahooFinance.Ticker(symbol)
-    stock_data = ticker.history(start=start_date, end=end_date)
+    stock_data_info = ticker.info
     stock_data['symbol'] = symbol
+    print('raw data:', stock_data) #raw data from yahoo finance
+    stock_data = ticker.history(start=start_date, end=end_date)
     data = pd.concat([data, stock_data])
+    symbol_share_price.reset_index(inplace=True)
+    symbol_share_price.plot(x='Date', y='Close', title=symbol)
+    print(symbol_share_price)
 
 # Clean and transform the data
-data = data.reset_index()
+data = data.reset_index()   # Reset the index     
 data = data.drop(['Dividends', 'Stock Splits', 'Volume'], axis=1)
 
 # Test Print the stock information
-# print(data)
+print(data)
 
 # Load the data into DuckDB database with context manager
 with duckdb.connect("yfinance.db") as con:

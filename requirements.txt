@@ -1,3 +1,6 @@
 yfinance 
 pandas
-duckdb
+cassandra-driver==3.25.0
+numpy==1.19.3
+astrapy==0.0.2
+simplejson==3.17.2
