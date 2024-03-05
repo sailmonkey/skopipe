@@ -1,3 +1,6 @@
 yfinance 
 pandas
 duckdb
+websocket-client
+finnhub-python
+boto3
