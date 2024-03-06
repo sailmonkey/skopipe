@@ -36,7 +36,7 @@ def on_message(ws, message):
     s3.put_object(
         Key=filename,
         Body=json.dumps(json_data),
-        Bucket='datalake'
+        Bucket='finnhub-raw'
     )
 
 def on_error(ws, error):
