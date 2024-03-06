@@ -1,7 +1,10 @@
 # skopipe
 FSA Team Demo
 
-Data Source Yahoo Fiances via ydata.py
+### Docker Images ###
+docker run --rm -d --name cassandra_skopipe --hostname cassandra_sko --network cassandra  -p 10.234.112.101:9042:9042 -p 10.234.112.101:9160:9160   -d cassandra
+docker run --rm -d --name prometheus_skopipe --network cassandra -p 10.234.112.101:9090:9090 -v /path/to/prometheus.yml:/etc/prometheus/prometheus.yml -v prometheus-data:/prometheus prom/prometheus
 
-yfinance.db created a persistent store for tick data
 
+### Updated packages with versions ###
+pip install -r requirements.txt

@@ -1,8 +1,8 @@
-import websocket
-import json
+import websocket # for connecting to Finnhub Websocket
+import json # for parsing JSON data from Finnhub
 import os
 import time
-import boto3
+import boto3 # for connecting to FlashBlade using Boto3
 
 
 # Variables required for FinnHub configuration
@@ -36,7 +36,7 @@ def on_message(ws, message):
     s3.put_object(
         Key=filename,
         Body=json.dumps(json_data),
-        Bucket='finnhub-raw'
+        Bucket='datalake'
     )
 
 def on_error(ws, error):

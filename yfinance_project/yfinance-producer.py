@@ -42,7 +42,7 @@ def fetch_and_send_stock_price():
     print(f"Error fetching/sending stock price: {e}")
 
 # Sleep for a specified interval (e.g., 5 seconds) before fetching the next price
-   time.sleep(30)
+   time.sleep(60)
 
 # Start sending stock price data
 fetch_and_send_stock_price()
