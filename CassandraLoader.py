@@ -11,9 +11,9 @@ from cassandra.cluster import Cluster
 symbol = "BINANCE:BTCUSDT"
 trade_timestamp = datetime.datetime.now()
 ingest_timestamp = datetime.datetime.now()
-price = 56000
+price = 32000
 trade_conditions = "T"
-volume = 1
+volume = 100
 id = uuid.uuid4() # Generate a unique ID for each trade
 
 def main():
@@ -30,14 +30,16 @@ def generateInsertData(symbol, trade_timestamp, ingest_timestamp, price, trade_c
                 VALUES (?, ?, ?, ?, ?, ?, ?)\
                 IF NOT EXISTS\
                 ")
-    number_of_rows = 50 # Number of rows to be inserted into Cassandra
+    number_of_rows = 10 # Number of rows to be inserted into Cassandra
     for t in range(0, number_of_rows):
         trade_timestamp = datetime.datetime.now() # Generate a new timestamp for each trade becuase its a primary key
         price = price + 300 # Increment the price for each trade
-        time.sleep(2)
+        volume = volume + 10 # Increment the volume for each trade
+        print("variables:", trade_timestamp, price, volume)
+        time.sleep(5)
         try:
             session.execute(insert_query, [symbol, trade_timestamp, ingest_timestamp, price, trade_conditions, id, volume])
-            print("Data Inserted into Cassandra Successfully")
+            print("Data Inserted trade data into Cassandra Successfully")
         except Exception as e: 
             print(e)
     # Query the data from Cassandra to verify the data has been inserted
