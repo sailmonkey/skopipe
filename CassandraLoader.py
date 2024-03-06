@@ -3,14 +3,15 @@ import boto3
 import json
 import os
 import uuid # for generating unique ID for each trade
+import datetime
 import time
 from cassandra.cluster import Cluster
 
 #static to be replaced with json data
 symbol = "BINANCE:BTCUSDT"
-trade_timestamp = time.time()
-ingest_timestamp = time.time()
-price = 45002
+trade_timestamp = datetime.datetime.now()
+ingest_timestamp = datetime.datetime.now()
+price = 56000
 trade_conditions = "T"
 volume = 1
 id = uuid.uuid4() # Generate a unique ID for each trade
@@ -29,9 +30,10 @@ def generateInsertData(symbol, trade_timestamp, ingest_timestamp, price, trade_c
                 VALUES (?, ?, ?, ?, ?, ?, ?)\
                 IF NOT EXISTS\
                 ")
-    number_of_rows = 3 # Number of rows to be inserted into Cassandra
+    number_of_rows = 50 # Number of rows to be inserted into Cassandra
     for t in range(0, number_of_rows):
-        trade_timestamp = time.time() # Generate a new timestamp for each trade becuase its a primary key
+        trade_timestamp = datetime.datetime.now() # Generate a new timestamp for each trade becuase its a primary key
+        price = price + 300 # Increment the price for each trade
         time.sleep(2)
         try:
             session.execute(insert_query, [symbol, trade_timestamp, ingest_timestamp, price, trade_conditions, id, volume])
