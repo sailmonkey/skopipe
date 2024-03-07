@@ -26,7 +26,9 @@ def main():
     df = converter.convert_df(df)
 
     # TODO Connect to Cassandra market DB and upload df, close connections
-    #loader.load_df(df)
+    loader.load_df(df)
+
+    # TODO Move objects to processed folder (or mark as .done)
 
 def get_s3_resource(fb_access_key, fb_secret_access_key, fb_endpoint):
     s3 = boto3.resource(
@@ -53,7 +55,7 @@ def concat_finnhub_json_objects_to_list(objects):
         json_content = get_object_json_contents(object)
 
         # Extract ingestion timestamp from object name for additiona to data list
-        ingest_timestamp = object.key.split('_')[0]
+        ingest_timestamp = int(object.key.split('_')[0])
 
         # Iterate through all objects, generate UUID and add to data list
         for record in json_content['data']:

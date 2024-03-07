@@ -21,20 +21,24 @@ def load_df(df):
     cluster = get_cluster(server)
     session = get_session(cluster, db)
     insert_query = session.prepare("\
-            INSERT INTO trades (symbol, trade_timestamp, ingest_timestamp, price, trade_conditions, uuid)\
-            VALUES (?, ?, ?, ?, ?, ?)\
+            INSERT INTO trades (symbol, trade_timestamp, ingest_timestamp, price, trade_conditions, uuid, exchange, ticker, volume)\
+            VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)\
             IF NOT EXISTS\
             ")
-    for item in df:
+    for index, row in df.iterrows():
         session.execute(
             insert_query, 
-            (item.symbol,
-             item.trade_timestamp,
-             item.ingest_timetamp,
-             item.price,
-             item.trade_conditions,
-             item.uuid)
+            (row['symbol'],
+             row['trade_timestamp'],
+             row['ingest_timestamp'],
+             row['price'],
+             row['trade_conditions'],
+             row['uuid'],
+             row['exchange'],
+             row['ticker'],
+             row['volume']
              )
+        )
     close(session, cluster)
     return None
 
