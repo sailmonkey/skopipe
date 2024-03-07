@@ -7,22 +7,41 @@ import datetime
 import time
 from cassandra.cluster import Cluster
 
-#static to be replaced with json data
-symbol = "BINANCE:BTCUSDT"
-trade_timestamp = datetime.datetime.now()
-ingest_timestamp = datetime.datetime.now()
-price = 32000
-trade_conditions = "T"
-volume = 100
-id = uuid.uuid4() # Generate a unique ID for each trade
 
-def main():
-    # Connect to Cassandra
-    global cluster
-    cluster = Cluster(['10.234.112.101'])
-    session = cluster.connect('market')
-    print("Connected to Cassandra")
-    generateInsertData(symbol, trade_timestamp, ingest_timestamp, price, trade_conditions, id, volume, session)
+server = '10.234.112.101'
+db = 'market'
+
+def get_cluster(server):
+    return Cluster([server])
+
+def get_session(cluster, db):
+    return cluster.connect(db)
+
+def load_df(df):
+    #TODO Create function to load finnhub df into cassandra
+    cluster = get_cluster(server)
+    session = get_session(cluster, db)
+    insert_query = session.prepare("\
+            INSERT INTO trades (symbol, trade_timestamp, ingest_timestamp, price, trade_conditions, uuid, exchange, ticker, volume)\
+            VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)\
+            IF NOT EXISTS\
+            ")
+    for index, row in df.iterrows():
+        session.execute(
+            insert_query, 
+            (row['symbol'],
+             row['trade_timestamp'],
+             row['ingest_timestamp'],
+             row['price'],
+             row['trade_conditions'],
+             row['uuid'],
+             row['exchange'],
+             row['ticker'],
+             row['volume']
+             )
+        )
+    close(session, cluster)
+    return None
 
 def generateInsertData(symbol, trade_timestamp, ingest_timestamp, price, trade_conditions, id, volume, session):
     insert_query = session.prepare("\
@@ -30,26 +49,13 @@ def generateInsertData(symbol, trade_timestamp, ingest_timestamp, price, trade_c
                 VALUES (?, ?, ?, ?, ?, ?, ?)\
                 IF NOT EXISTS\
                 ")
-    number_of_rows = 10 # Number of rows to be inserted into Cassandra
-    for t in range(0, number_of_rows):
-        trade_timestamp = datetime.datetime.now() # Generate a new timestamp for each trade becuase its a primary key
-        price = price + 300 # Increment the price for each trade
-        volume = volume + 10 # Increment the volume for each trade
-        print("variables:", trade_timestamp, price, volume)
-        time.sleep(5)
-        try:
-            session.execute(insert_query, [symbol, trade_timestamp, ingest_timestamp, price, trade_conditions, id, volume])
-            print("Data Inserted trade data into Cassandra Successfully")
-        except Exception as e: 
-            print(e)
-    # Query the data from Cassandra to verify the data has been inserted
-    rows = session.execute('SELECT symbol, price FROM trades')
-    for symbol in rows:
-        print(symbol.symbol, symbol.price)
-   
+    try:
+        session.execute(insert_query, [symbol, trade_timestamp, ingest_timestamp, price, trade_conditions, id, volume])
+        print("Data Inserted into Cassandra Successfully" + id)
+    except Exception as e: 
+        print(e)
+
+def close(session, cluster):
     session.shutdown(); # Close the session
     cluster.shutdown(); # Close the connection to Cassandra
     print("Closed Connection to Cassandra")
-
-if __name__ == "__main__":
-    main()
