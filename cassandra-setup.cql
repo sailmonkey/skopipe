@@ -15,13 +15,3 @@ CREATE TABLE IF NOT EXISTS trades(
 WITH CLUSTERING ORDER BY (trade_timestamp DESC);
 
 CREATE INDEX IF NOT EXISTS ON trades (uuid);
-
-CREATE TABLE IF NOT EXISTS running_averages_15_sec(
-    uuid uuid,
-    symbol text,
-    price_volume_multiply double,
-    ingest_timestamp timestamp,
-    PRIMARY KEY((uuid),ingest_timestamp))
-WITH CLUSTERING ORDER BY (ingest_timestamp DESC);
-
-CREATE INDEX IF NOT EXISTS ON running_averages_15_sec (symbol);

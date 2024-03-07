@@ -3,6 +3,7 @@ import boto3
 import json
 import os
 import uuid # for generating unique ID for each trade
+import datetime
 import time
 from cassandra.cluster import Cluster
 
