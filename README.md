@@ -8,3 +8,8 @@ docker run --rm -d --name prometheus_skopipe --network cassandra -p 10.234.112.1
 
 ### Updated packages with versions ###
 pip install -r requirements.txt
+
+### Must set the environmental variables before running Producer ###
+export FINNHUB_API_KEY=<key>
+export NYC_FB200_ACCESS_KEY=<key>
+export NYC_FB200_SECRET_ACCESS_KEY=<key>
