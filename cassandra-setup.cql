@@ -9,6 +9,8 @@ CREATE TABLE IF NOT EXISTS trades(
     trade_conditions text,
     price double,
     volume double,
+    exchange text,
+    ticker text,
     trade_timestamp timestamp,
     ingest_timestamp timestamp,
     PRIMARY KEY((symbol),trade_timestamp))
