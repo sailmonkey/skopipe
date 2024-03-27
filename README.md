@@ -70,13 +70,13 @@ DashBoard Json: https://github.com/sailmonkey/skopipe/blob/main/MarketData%20das
 
 Keys/Environmental Variables:
 
-export FINNHUB_API_KEY=cngk6vpr01qq9hn92hq0cngk6vpr01qq9hn92hqg
+export FINNHUB_API_KEY=
 echo $FINNHUB_API_KEY
-export NYC_FB200_ACCESS_KEY=PSFBSAZQHGDJCEAFGHLPOLCNGBACAEDAODGJNMCF
+export NYC_FB200_ACCESS_KEY=
 echo $NYC_FB200_ACCESS_KEY
-export NYC_FB200_SECRET_ACCESS_KEY=E4E8963E3402016/555c7B2D10A3ed4a863bGFNP
+export NYC_FB200_SECRET_ACCESS_KEY=
 echo $NYC_FB200_SECRET_ACCESS_KEY
 
-S3 endpoint URL: 10.234.112.148
-FB API Token: T-4adb010c-bde3-4f30-9ce4-8294002bde6e
+S3 endpoint URL: 
+FB API Token:
 
